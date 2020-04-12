@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "lite-server": "^2.5.4",
+    "package-lock.json": "^1.0.0",
     "typescript": "^3.8.3"
   },
   "devDependencies": {},
