@@ -1,25 +1,22 @@
 //make singleton
 class ProjectInput {
-  formElement: HTMLTemplateElement;
+  formTemplate: HTMLTemplateElement;
   hostElement: HTMLDivElement;
-
-  //   private _title: string;
-  //   private _description: string;
-  //   private _people: number;
-
-  //   constructor(t: string, d: string, p: number) {
-  //     this._title = t;
-  //     this._description = d;
-  //     this._people = p;
-  //   }
+  formElement: HTMLFormElement;
 
   constructor() {
-    this.formElement = document.getElementById(
-      "project-input"
-    )! as HTMLTemplateElement;
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
-    const formContent = this.formElement.content.cloneNode(true);
-    this.hostElement.appendChild(formContent);
+    {
+      this.formTemplate = document.getElementById(
+        "project-input"
+      )! as HTMLTemplateElement;
+      this.hostElement = document.getElementById("app")! as HTMLDivElement;
+
+      const importedNode = document.importNode(this.formTemplate.content, true);
+      this.formElement = importedNode.firstElementChild as HTMLFormElement;
+      this.formElement.id = "user-input";
+
+      this.hostElement.appendChild(this.formElement);
+    }
   }
 }
 
