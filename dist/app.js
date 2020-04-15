@@ -28,8 +28,15 @@ var ProjectInput = /** @class */ (function () {
     }
     ProjectInput.prototype.submitHandler = function (event) {
         event.preventDefault();
-        console.log("submit handler");
-        this.projectList.AddProject(this.titleInputElement.innerText, this.descriptionInputElement.innerText, this.valueInputElement.innerText);
+        var validInput = this.projectList.AddProject(this.titleInputElement.value, this.descriptionInputElement.value, this.valueInputElement.value);
+        if (validInput[0]) {
+            this.titleInputElement.value = "";
+            this.descriptionInputElement.value = "";
+            this.valueInputElement.value = "";
+        }
+        else {
+            alert("invlaid input: " + validInput[1]);
+        }
     };
     return ProjectInput;
 }());
@@ -44,18 +51,35 @@ var ProjectList = /** @class */ (function () {
     }
     ProjectList.prototype.AddProject = function (title, description, value) {
         var project = new Project(title, description, value);
-        var projectNode = document.importNode(this.projectTemplate.content, true);
-        var projectElement = projectNode.firstElementChild;
-        this.projectListElement.appendChild(projectElement);
+        if (project.isValid) {
+            var projectNode = document.importNode(this.projectTemplate.content, true);
+            var projectElement = projectNode.firstElementChild;
+            this.projectListElement.appendChild(projectElement);
+        }
+        return [project.isValid, project.validationMessage];
     };
     return ProjectList;
 }());
 var Project = /** @class */ (function () {
     //   private _state: number;
     function Project(t, d, v) {
-        this._title = t;
-        this._description = d;
-        this._value = +v;
+        this.isValid = true;
+        this.validationMessage = "";
+        if (t.trim().length === 0) {
+            this.isValid = false;
+            this.validationMessage = "Title is empty";
+        }
+        if (d.trim().length === 0) {
+            this.isValid = false;
+            this.validationMessage = "Description is empty";
+        }
+        if (v.trim().length === 0) {
+            this.isValid = false;
+            this.validationMessage = "Value is empty";
+        }
+        this._title = t.trim();
+        this._description = d.trim();
+        this._value = +v.trim();
     }
     return Project;
 }());

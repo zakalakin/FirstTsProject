@@ -50,15 +50,22 @@ class ProjectInput {
     this.projectList = new ProjectList();
   }
 
-  submitHandler(event: Event) {
+  private submitHandler(event: Event) {
     event.preventDefault();
-    console.log("submit handler");
 
-    this.projectList.AddProject(
-      this.titleInputElement.innerText,
-      this.descriptionInputElement.innerText,
-      this.valueInputElement.innerText
+    const validInput = this.projectList.AddProject(
+      this.titleInputElement.value,
+      this.descriptionInputElement.value,
+      this.valueInputElement.value
     );
+
+    if (validInput[0]) {
+      this.titleInputElement.value = "";
+      this.descriptionInputElement.value = "";
+      this.valueInputElement.value = "";
+    } else {
+      alert(`invlaid input: ${validInput[1]}`);
+    }
   }
 }
 
@@ -86,11 +93,20 @@ class ProjectList {
     )! as HTMLTemplateElement;
   }
 
-  AddProject(title: string, description: string, value: string) {
+  AddProject(
+    title: string,
+    description: string,
+    value: string
+  ): [boolean, string] {
     let project = new Project(title, description, value);
-    let projectNode = document.importNode(this.projectTemplate.content, true);
-    let projectElement = projectNode.firstElementChild as HTMLElement;
-    this.projectListElement.appendChild(projectElement);
+
+    if (project.isValid) {
+      let projectNode = document.importNode(this.projectTemplate.content, true);
+      let projectElement = projectNode.firstElementChild as HTMLElement;
+      this.projectListElement.appendChild(projectElement);
+    }
+
+    return [project.isValid, project.validationMessage];
   }
 }
 
@@ -98,13 +114,27 @@ class Project {
   _title: string;
   _description: string;
   _value: number;
+  isValid = true;
+  validationMessage = "";
 
   //   private _state: number;
 
   constructor(t: string, d: string, v: string) {
-    this._title = t;
-    this._description = d;
-    this._value = +v;
+    if (t.trim().length === 0) {
+      this.isValid = false;
+      this.validationMessage = "Title is empty";
+    }
+    if (d.trim().length === 0) {
+      this.isValid = false;
+      this.validationMessage = "Description is empty";
+    }
+    if (v.trim().length === 0) {
+      this.isValid = false;
+      this.validationMessage = "Value is empty";
+    }
+    this._title = t.trim();
+    this._description = d.trim();
+    this._value = +v.trim();
   }
 }
 
