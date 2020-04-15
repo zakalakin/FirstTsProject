@@ -4,19 +4,47 @@ class ProjectInput {
   formTemplate: HTMLTemplateElement;
   formElement: HTMLFormElement;
 
+  titleInputElement: HTMLInputElement;
+  descriptionInputElement: HTMLInputElement;
+  valueInputElement: HTMLInputElement;
+
+  projectList: ProjectList;
+
   constructor() {
-    {
-      this.hostElement = document.getElementById("app")! as HTMLDivElement;
-      this.formTemplate = document.getElementById(
-        "project-input"
-      )! as HTMLTemplateElement;
+    this.hostElement = document.getElementById("app")! as HTMLDivElement;
+    this.formTemplate = document.getElementById(
+      "project-input"
+    )! as HTMLTemplateElement;
 
-      const formNode = document.importNode(this.formTemplate.content, true);
-      this.formElement = formNode.firstElementChild as HTMLFormElement;
-      this.formElement.id = "user-input";
+    const formNode = document.importNode(this.formTemplate.content, true);
+    this.formElement = formNode.firstElementChild as HTMLFormElement;
+    this.formElement.id = "user-input";
 
-      this.hostElement.appendChild(this.formElement);
-    }
+    this.titleInputElement = this.formElement.querySelector(
+      "#title"
+    ) as HTMLInputElement;
+    this.descriptionInputElement = this.formElement.querySelector(
+      "#description"
+    ) as HTMLInputElement;
+    this.valueInputElement = this.formElement.querySelector(
+      "#people"
+    ) as HTMLInputElement;
+
+    this.hostElement.appendChild(this.formElement);
+
+    this.formElement.addEventListener("submit", this.submitHandler.bind(this));
+
+    this.projectList = new ProjectList();
+  }
+  submitHandler(event: Event) {
+    event.preventDefault();
+    console.log("submit handler");
+
+    this.projectList.AddProject(
+      this.titleInputElement.innerText,
+      this.descriptionInputElement.innerText,
+      this.valueInputElement.innerText
+    );
   }
 }
 
@@ -44,25 +72,27 @@ class ProjectList {
     )! as HTMLTemplateElement;
   }
 
-  AddProject(id: string) {
+  AddProject(title: string, description: string, value: string) {
+    let project = new Project(title, description, value);
     let projectNode = document.importNode(this.projectTemplate.content, true);
     let projectElement = projectNode.firstElementChild as HTMLElement;
-    projectElement.id = id;
     this.projectListElement.appendChild(projectElement);
   }
 }
 
-// class Project {
-//
+class Project {
+  _title: string;
+  _description: string;
+  _value: number;
 
-//     constructor(){
-//         this.hostElement = document.getElementById("app")! as HTMLDivElement;
+  //   private _state: number;
 
-//     }
-// }
+  constructor(t: string, d: string, v: string) {
+    this._title = t;
+    this._description = d;
+    this._value = +v;
+  }
+}
 
 const projectInput = new ProjectInput();
-const projectList = new ProjectList();
-projectList.AddProject("cat");
-projectList.AddProject("dog");
-projectList.AddProject("mouse");
+// const projectList = new ProjectList();
