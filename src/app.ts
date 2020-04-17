@@ -1,4 +1,47 @@
 //decorators
+
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+
+  minValue?: number;
+  maxValue?: number;
+}
+
+function validate(validatableInput: Validatable): boolean {
+  let isValid = true;
+
+  if (validatableInput.required) {
+    isValid = isValid && validatableInput.value.toString().trim().length !== 0;
+  }
+
+  if (validatableInput.minLength != null) {
+    isValid =
+      isValid &&
+      validatableInput.value.toString().trim().length >=
+        validatableInput.minLength;
+  }
+
+  if (validatableInput.maxLength != null) {
+    isValid =
+      isValid &&
+      validatableInput.value.toString().trim().length <=
+        validatableInput.maxLength;
+  }
+
+  if (validatableInput.minValue != null) {
+    isValid = isValid && validatableInput.value >= validatableInput.minValue;
+  }
+
+  if (validatableInput.maxValue != null) {
+    isValid = isValid && validatableInput.value <= validatableInput.maxValue;
+  }
+
+  return isValid;
+}
+
 function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
   const adjDescriptor: PropertyDescriptor = {
@@ -56,7 +99,7 @@ class ProjectInput {
     const validInput = this.projectList.AddProject(
       this.titleInputElement.value,
       this.descriptionInputElement.value,
-      this.valueInputElement.value
+      +this.valueInputElement.value
     );
 
     if (validInput[0]) {
@@ -96,7 +139,7 @@ class ProjectList {
   AddProject(
     title: string,
     description: string,
-    value: string
+    value: number
   ): [boolean, string] {
     let project = new Project(title, description, value);
 
@@ -115,26 +158,41 @@ class Project {
   _description: string;
   _value: number;
   isValid = true;
-  validationMessage = "";
+  validationMessage = "Some of your input is invalid, try again.";
 
-  //   private _state: number;
-
-  constructor(t: string, d: string, v: string) {
-    if (t.trim().length === 0) {
-      this.isValid = false;
-      this.validationMessage = "Title is empty";
-    }
-    if (d.trim().length === 0) {
-      this.isValid = false;
-      this.validationMessage = "Description is empty";
-    }
-    if (v.trim().length === 0) {
-      this.isValid = false;
-      this.validationMessage = "Value is empty";
-    }
+  constructor(t: string, d: string, v: number) {
     this._title = t.trim();
     this._description = d.trim();
-    this._value = +v.trim();
+    this._value = v;
+
+    const titleValidatable: Validatable = {
+      value: this._title,
+      required: true,
+      minLength: 1,
+      maxLength: 50,
+    };
+
+    const descriptionValidatable: Validatable = {
+      value: this._description,
+      required: false,
+      minLength: 0,
+      maxLength: 200,
+    };
+
+    const valueValidatable: Validatable = {
+      value: this._value,
+      required: false,
+      minValue: 0,
+      maxValue: 99,
+    };
+
+    if (
+      !validate(titleValidatable) ||
+      !validate(descriptionValidatable) ||
+      !validate(valueValidatable)
+    ) {
+      this.isValid = false;
+    }
   }
 }
 
