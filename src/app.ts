@@ -160,11 +160,23 @@ class Project {
   isValid = true;
   validationMessage = "Some of your input is invalid, try again.";
 
+  // projectTemplate: HTMLTemplateElement;
+  // projectElement: HTMLElement;
+  // titleElement: HTMLElement;
+  // descriptionElement: HTMLElement;
+  // valueElement: HTMLElement;
+
   constructor(t: string, d: string, v: number) {
     this._title = t.trim();
     this._description = d.trim();
     this._value = v;
 
+    this.Validation();
+
+    // this.projectTemplate = document.getElementById("");
+  }
+
+  private Validation() {
     const titleValidatable: Validatable = {
       value: this._title,
       required: true,
@@ -174,8 +186,8 @@ class Project {
 
     const descriptionValidatable: Validatable = {
       value: this._description,
-      required: false,
-      minLength: 0,
+      required: true,
+      minLength: 1,
       maxLength: 200,
     };
 
