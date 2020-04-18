@@ -64,8 +64,6 @@ class ProjectInput {
   descriptionInputElement: HTMLInputElement;
   valueInputElement: HTMLInputElement;
 
-  projectList: ProjectList;
-
   constructor() {
     this.hostElement = document.getElementById("app")! as HTMLDivElement;
     this.formTemplate = document.getElementById(
@@ -89,25 +87,23 @@ class ProjectInput {
     this.hostElement.appendChild(this.formElement);
 
     this.formElement.addEventListener("submit", this.submitHandler.bind(this));
-
-    this.projectList = new ProjectList();
   }
 
   private submitHandler(event: Event) {
     event.preventDefault();
 
-    const validInput = this.projectList.AddProject(
+    const project = new Project(
       this.titleInputElement.value,
       this.descriptionInputElement.value,
       +this.valueInputElement.value
     );
 
-    if (validInput[0]) {
+    if (project.isValid) {
       this.titleInputElement.value = "";
       this.descriptionInputElement.value = "";
       this.valueInputElement.value = "";
     } else {
-      alert(`invlaid input: ${validInput[1]}`);
+      alert(`invlaid input: ${project.validationMessage}`);
     }
   }
 }
@@ -116,9 +112,9 @@ class ProjectList {
   hostElement: HTMLDivElement;
   projectListTemplate: HTMLTemplateElement;
   projectListElement: HTMLElement;
-  projectTemplate: HTMLTemplateElement;
+  // projectTemplate: HTMLTemplateElement;
 
-  constructor() {
+  constructor(type: "Start" | "Continue" | "Stop") {
     this.hostElement = document.getElementById("app")! as HTMLDivElement;
     this.projectListTemplate = document.getElementById(
       "project-list"
@@ -129,27 +125,10 @@ class ProjectList {
       true
     );
     this.projectListElement = projectListNode.firstElementChild as HTMLElement;
+
+    this.projectListElement.id = `${type}-project-list`;
+    this.projectListElement.querySelector("h2")!.textContent = type;
     this.hostElement.appendChild(this.projectListElement);
-
-    this.projectTemplate = document.getElementById(
-      "single-project"
-    )! as HTMLTemplateElement;
-  }
-
-  AddProject(
-    title: string,
-    description: string,
-    value: number
-  ): [boolean, string] {
-    let project = new Project(title, description, value);
-
-    if (project.isValid) {
-      let projectNode = document.importNode(this.projectTemplate.content, true);
-      let projectElement = projectNode.firstElementChild as HTMLElement;
-      this.projectListElement.appendChild(projectElement);
-    }
-
-    return [project.isValid, project.validationMessage];
   }
 }
 
@@ -158,13 +137,7 @@ class Project {
   _description: string;
   _value: number;
   isValid = true;
-  validationMessage = "Some of your input is invalid, try again.";
-
-  // projectTemplate: HTMLTemplateElement;
-  // projectElement: HTMLElement;
-  // titleElement: HTMLElement;
-  // descriptionElement: HTMLElement;
-  // valueElement: HTMLElement;
+  validationMessage = "Your input is invalid, try harder...";
 
   constructor(t: string, d: string, v: number) {
     this._title = t.trim();
@@ -172,8 +145,6 @@ class Project {
     this._value = v;
 
     this.Validation();
-
-    // this.projectTemplate = document.getElementById("");
   }
 
   private Validation() {
@@ -209,4 +180,4 @@ class Project {
 }
 
 const projectInput = new ProjectInput();
-// const projectList = new ProjectList();
+const projectList = new ProjectList("Start");
