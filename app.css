@@ -77,11 +77,11 @@ button:active {
 }
 
 #start-post-it {
-  border-color: #91ff00;
+  border-color: #40ad39;
 }
 
 #start-post-it header {
-  background: #91ff00;
+  background: #40ad39;
 }
 
 #continue-post-it {
@@ -89,7 +89,7 @@ button:active {
 }
 
 #continue-post-it header {
-  background: #ff8400;
+  background: #ef7400;
 }
 
 #stop-post-it {

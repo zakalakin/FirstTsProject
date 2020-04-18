@@ -112,9 +112,8 @@ class ProjectList {
   hostElement: HTMLDivElement;
   projectListTemplate: HTMLTemplateElement;
   projectListElement: HTMLElement;
-  // projectTemplate: HTMLTemplateElement;
 
-  constructor(type: "Start" | "Continue" | "Stop") {
+  constructor(type: "Start" | "Continue" | "Stop" | "Unsorted") {
     this.hostElement = document.getElementById("app")! as HTMLDivElement;
     this.projectListTemplate = document.getElementById(
       "project-list"
@@ -139,12 +138,35 @@ class Project {
   isValid = true;
   validationMessage = "Your input is invalid, try harder...";
 
+  hostElement?: HTMLElement;
+  projectTemplate?: HTMLTemplateElement;
+  projectElement?: HTMLElement;
+
   constructor(t: string, d: string, v: number) {
     this._title = t.trim();
     this._description = d.trim();
     this._value = v;
 
     this.Validation();
+
+    if (this.isValid) {
+      this.hostElement = document.getElementById(
+        "unsorted-post-it"
+      )! as HTMLElement;
+
+      this.projectTemplate = document.getElementById(
+        "post-it"
+      )! as HTMLTemplateElement;
+
+      const projectNode = document.importNode(
+        this.projectTemplate.content,
+        true
+      );
+
+      this.projectElement = projectNode.firstElementChild as HTMLElement;
+      this.projectElement.innerText = `${this._title} - ${this._description} - ${this._value}`;
+      this.hostElement.appendChild(this.projectElement);
+    }
   }
 
   private Validation() {
@@ -180,6 +202,7 @@ class Project {
 }
 
 const projectInput = new ProjectInput();
+const projectList0 = new ProjectList("Unsorted");
 const projectList = new ProjectList("Start");
 const projectList2 = new ProjectList("Continue");
 const projectList3 = new ProjectList("Stop");
