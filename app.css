@@ -68,12 +68,36 @@ button:active {
   align-items: center;
 }
 
-#finished-projects {
-  border-color: #0044ff;
+#unsorted-post-it {
+  border-color: #808080;
 }
 
-#finished-projects header {
-  background: #0044ff;
+#unsorted-post-it header {
+  background: #808080;
+}
+
+#start-post-it {
+  border-color: #91ff00;
+}
+
+#start-post-it header {
+  background: #91ff00;
+}
+
+#continue-post-it {
+  border-color: #ff8400;
+}
+
+#continue-post-it header {
+  background: #ff8400;
+}
+
+#stop-post-it {
+  border-color: #ff3700;
+}
+
+#stop-post-it header {
+  background: #ff3700;
 }
 
 .projects h2 {

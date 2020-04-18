@@ -126,7 +126,7 @@ class ProjectList {
     );
     this.projectListElement = projectListNode.firstElementChild as HTMLElement;
 
-    this.projectListElement.id = `${type}-project-list`;
+    this.projectListElement.id = `${type.toLowerCase()}-post-it`;
     this.projectListElement.querySelector("h2")!.textContent = type;
     this.hostElement.appendChild(this.projectListElement);
   }
@@ -181,3 +181,5 @@ class Project {
 
 const projectInput = new ProjectInput();
 const projectList = new ProjectList("Start");
+const projectList2 = new ProjectList("Continue");
+const projectList3 = new ProjectList("Stop");
