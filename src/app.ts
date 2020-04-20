@@ -64,39 +64,64 @@ function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   return adjDescriptor;
 }
 
-//make singleton
-class ProjectInput {
-  hostElement: HTMLDivElement;
-  formTemplate: HTMLTemplateElement;
-  formElement: HTMLFormElement;
+//component base class
+abstract class Component<T extends HTMLElement, U extends HTMLElement> {
+  templateElement: HTMLTemplateElement;
+  hostElement: T;
+  element: U;
 
+  constructor(
+    tempalteId: string,
+    hostElementId: string,
+    insertAtStart: boolean,
+    newElementId?: string
+  ) {
+    this.templateElement = document.getElementById(
+      tempalteId
+    )! as HTMLTemplateElement;
+
+    this.hostElement = document.getElementById(hostElementId)! as T;
+
+    const formNode = document.importNode(this.templateElement.content, true);
+    this.element = formNode.firstElementChild as U;
+    if (newElementId) {
+      this.element.id = newElementId;
+    }
+
+    this.attach(insertAtStart);
+  }
+
+  private attach(insertAtStart: boolean) {
+    this.hostElement.insertAdjacentElement(
+      insertAtStart ? "afterbegin" : "beforeend",
+      this.element
+    );
+  }
+
+  // abstract configure(): void;
+  // abstract renderContent(): void;
+}
+
+//make singleton
+class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   titleInputElement: HTMLInputElement;
   descriptionInputElement: HTMLInputElement;
   valueInputElement: HTMLInputElement;
 
   constructor() {
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
-    this.formTemplate = document.getElementById(
-      "project-input"
-    )! as HTMLTemplateElement;
+    super("project-input", "app", false, "user-input");
 
-    const formNode = document.importNode(this.formTemplate.content, true);
-    this.formElement = formNode.firstElementChild as HTMLFormElement;
-    this.formElement.id = "user-input";
-
-    this.titleInputElement = this.formElement.querySelector(
+    this.titleInputElement = this.element.querySelector(
       "#title"
     ) as HTMLInputElement;
-    this.descriptionInputElement = this.formElement.querySelector(
+    this.descriptionInputElement = this.element.querySelector(
       "#description"
     ) as HTMLInputElement;
-    this.valueInputElement = this.formElement.querySelector(
+    this.valueInputElement = this.element.querySelector(
       "#people"
     ) as HTMLInputElement;
 
-    this.hostElement.appendChild(this.formElement);
-
-    this.formElement.addEventListener("submit", this.submitHandler.bind(this));
+    this.element.addEventListener("submit", this.submitHandler.bind(this));
   }
 
   private submitHandler(event: Event) {
