@@ -91,15 +91,14 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     this.attach(insertAtStart);
   }
 
+  abstract configure(): void;
+
   private attach(insertAtStart: boolean) {
     this.hostElement.insertAdjacentElement(
       insertAtStart ? "afterbegin" : "beforeend",
       this.element
     );
   }
-
-  abstract configure(): void;
-  // abstract renderContent(): void;
 }
 
 class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
@@ -120,6 +119,10 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       "#people"
     ) as HTMLInputElement;
 
+    this.configure();
+  }
+
+  configure() {
     this.element.addEventListener("submit", this.submitHandler.bind(this));
   }
 
@@ -142,8 +145,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       alert(`invlaid input: ${"Invalid input"}`);
     }
   }
-
-  configure() {}
 }
 
 class ProjectList extends Component<HTMLDivElement, HTMLElement> {
