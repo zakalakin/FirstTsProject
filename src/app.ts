@@ -114,8 +114,11 @@ class ProjectList {
   hostElement: HTMLDivElement;
   projectListTemplate: HTMLTemplateElement;
   projectListElement: HTMLElement;
+  type: "Start" | "Continue" | "Stop" | "Unsorted";
+  assignedProjects: any[];
 
   constructor(type: "Start" | "Continue" | "Stop" | "Unsorted") {
+    this.type = type;
     this.hostElement = document.getElementById("app")! as HTMLDivElement;
     this.projectListTemplate = document.getElementById(
       "project-list"
@@ -126,10 +129,27 @@ class ProjectList {
       true
     );
     this.projectListElement = projectListNode.firstElementChild as HTMLElement;
+    this.assignedProjects = [];
 
-    this.projectListElement.id = `${type.toLowerCase()}-post-it`;
+    this.projectListElement.id = `${this.type.toLowerCase()}-post-it`;
     this.projectListElement.querySelector("h2")!.textContent = type;
     this.hostElement.appendChild(this.projectListElement);
+
+    projects.addListener((p: any[]) => {
+      this.assignedProjects = p;
+      this.renderProjects();
+    });
+  }
+
+  private renderProjects() {
+    const listEl = document.getElementById(
+      `${this.type.toLocaleLowerCase()}-post-it`
+    )!;
+    for (const projectItem of this.assignedProjects) {
+      const listItem = document.createElement("li");
+      listItem.textContent = projectItem.title;
+      listEl.appendChild(listItem);
+    }
   }
 }
 
@@ -148,6 +168,8 @@ class Project {
 }
 
 class Projects {
+  private listeners: any[] = [];
+
   projectList: Project[] = [];
 
   hostElement?: HTMLElement;
@@ -165,6 +187,10 @@ class Projects {
     this._Projects = new Projects();
 
     return this._Projects;
+  }
+
+  addListener(listenerFn: Function) {
+    this.listeners.push(listenerFn);
   }
 
   addProject(project: Project): boolean {
@@ -189,6 +215,10 @@ class Projects {
       this.hostElement.appendChild(this.projectElement);
 
       this.projectList.push(project);
+
+      for (const listenerFn of this.listeners) {
+        listenerFn(this.projectList.slice());
+      }
     }
 
     return validation;
