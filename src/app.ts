@@ -150,15 +150,21 @@ class ProjectList {
     this.hostElement.appendChild(this.projectListElement);
 
     projects.addListener((projects: Project[]) => {
-      this.assignedProjects = projects;
+      const relevantProjects = projects.filter((prj) => {
+        return prj.status === this.status;
+      });
+      this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
   }
 
   private renderProjects() {
-    const listEl = document.getElementById(
+    const sectionEl = document.getElementById(
       `${this.status.toString().toLocaleLowerCase()}-post-it`
     )!;
+    const listEl = sectionEl.getElementsByTagName("ul")[0] as HTMLUListElement;
+    listEl.innerHTML = "";
+
     for (const projectItem of this.assignedProjects) {
       const listItem = document.createElement("li");
       listItem.textContent = projectItem.title;
@@ -211,22 +217,22 @@ class Projects {
     const validation = this.Validation(project);
 
     if (validation) {
-      this.hostElement = document.getElementById(
-        `${project.status.toString()}-post-it`
-      )! as HTMLElement;
+      // this.hostElement = document.getElementById(
+      //   `${project.status.toString()}-post-it`
+      // )! as HTMLElement;
 
-      this.projectTemplate = document.getElementById(
-        "post-it"
-      )! as HTMLTemplateElement;
+      // this.projectTemplate = document.getElementById(
+      //   "post-it"
+      // )! as HTMLTemplateElement;
 
-      const projectNode = document.importNode(
-        this.projectTemplate.content,
-        true
-      );
+      // const projectNode = document.importNode(
+      //   this.projectTemplate.content,
+      //   true
+      // );
 
-      this.projectElement = projectNode.firstElementChild as HTMLElement;
-      this.projectElement.innerText = `${project.title} - ${project.description}`;
-      this.hostElement.appendChild(this.projectElement);
+      // this.projectElement = projectNode.firstElementChild as HTMLElement;
+      // this.projectElement.innerText = `${project.title} - ${project.description}`;
+      // this.hostElement.appendChild(this.projectElement);
 
       this.projectList.push(project);
 
