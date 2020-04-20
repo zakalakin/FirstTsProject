@@ -10,6 +10,13 @@ interface Validatable {
   maxValue?: number;
 }
 
+enum Status {
+  Unassigned,
+  Start,
+  Continue,
+  Stop,
+}
+
 function validate(validatableInput: Validatable): boolean {
   let isValid = true;
 
@@ -114,11 +121,11 @@ class ProjectList {
   hostElement: HTMLDivElement;
   projectListTemplate: HTMLTemplateElement;
   projectListElement: HTMLElement;
-  type: "Start" | "Continue" | "Stop" | "Unsorted";
+  status: Status;
   assignedProjects: any[];
 
-  constructor(type: "Start" | "Continue" | "Stop" | "Unsorted") {
-    this.type = type;
+  constructor(status: Status) {
+    this.status = status;
     this.hostElement = document.getElementById("app")! as HTMLDivElement;
     this.projectListTemplate = document.getElementById(
       "project-list"
@@ -131,8 +138,12 @@ class ProjectList {
     this.projectListElement = projectListNode.firstElementChild as HTMLElement;
     this.assignedProjects = [];
 
-    this.projectListElement.id = `${this.type.toLowerCase()}-post-it`;
-    this.projectListElement.querySelector("h2")!.textContent = type;
+    this.projectListElement.id = `${this.status
+      .toString()
+      .toLowerCase()}-post-it`;
+    this.projectListElement.querySelector(
+      "h2"
+    )!.textContent = status.toString();
     this.hostElement.appendChild(this.projectListElement);
 
     projects.addListener((p: any[]) => {
@@ -143,7 +154,7 @@ class ProjectList {
 
   private renderProjects() {
     const listEl = document.getElementById(
-      `${this.type.toLocaleLowerCase()}-post-it`
+      `${this.status.toString().toLocaleLowerCase()}-post-it`
     )!;
     for (const projectItem of this.assignedProjects) {
       const listItem = document.createElement("li");
@@ -260,7 +271,7 @@ class Projects {
 const projects = Projects.getInstance();
 
 const projectInput = new ProjectInput();
-const projectList0 = new ProjectList("Unsorted"); //project state instead?
-const projectList = new ProjectList("Start");
-const projectList2 = new ProjectList("Continue");
-const projectList3 = new ProjectList("Stop");
+const projectList0 = new ProjectList(Status.Unassigned); //project state instead?
+const projectList = new ProjectList(Status.Start);
+const projectList2 = new ProjectList(Status.Continue);
+const projectList3 = new ProjectList(Status.Stop);
