@@ -157,7 +157,8 @@ class InputComponent extends Component<HTMLDivElement, HTMLFormElement> {
   }
 }
 
-class PostitListComponent extends Component<HTMLDivElement, HTMLElement> {
+class PostitListComponent extends Component<HTMLDivElement, HTMLElement>
+  implements DragTarget {
   assignedPostits: any[];
 
   constructor(public status: Status) {
@@ -171,6 +172,28 @@ class PostitListComponent extends Component<HTMLDivElement, HTMLElement> {
     this.assignedPostits = [];
 
     this.configure();
+  }
+
+  @autobind
+  dragOverHandler(event: DragEvent) {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.add("droppable");
+  }
+
+  dropHandler(_: DragEvent) {}
+
+  @autobind
+  dragLeaveHandler(event: DragEvent) {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.remove("droppable");
+  }
+
+  configure() {
+    this.element.querySelector("h2")!.textContent = this.status.toString();
+
+    this.element.addEventListener("dragover", this.dragOverHandler);
+    this.element.addEventListener("dragleave", this.dragLeaveHandler);
+    this.element.addEventListener("drop", this.dropHandler);
 
     postits.addListener((postit: Postit[]) => {
       const relevantProjects = postit.filter((prj) => {
@@ -179,10 +202,6 @@ class PostitListComponent extends Component<HTMLDivElement, HTMLElement> {
       this.assignedPostits = relevantProjects;
       this.renderPostits();
     });
-  }
-
-  configure() {
-    this.element.querySelector("h2")!.textContent = this.status.toString();
   }
 
   private renderPostits() {
@@ -199,7 +218,8 @@ class PostitListComponent extends Component<HTMLDivElement, HTMLElement> {
   }
 }
 
-class PostitComponent extends Component<HTMLUListElement, HTMLLIElement> {
+class PostitComponent extends Component<HTMLUListElement, HTMLLIElement>
+  implements Draggable {
   private postit: Postit;
 
   constructor(hostId: string, postit: Postit) {
@@ -210,7 +230,20 @@ class PostitComponent extends Component<HTMLUListElement, HTMLLIElement> {
     this.configure();
     this.renderContent();
   }
-  configure() {}
+
+  @autobind
+  dragStartHandler(event: DragEvent) {
+    console.log(event);
+  }
+
+  dragEndHandler(_: DragEvent) {
+    console.log("DragEnd");
+  }
+
+  configure() {
+    this.element.addEventListener("dragstart", this.dragStartHandler);
+    this.element.addEventListener("dragend", this.dragEndHandler);
+  }
 
   renderContent() {
     this.element.querySelector("h2")!.textContent = this.postit.title;
