@@ -1,5 +1,15 @@
-//decorators
+// Drag & Drop Interfaces
+interface Draggable {
+  dragStartHandler(event: DragEvent): void;
+  dragEndHandler(event: DragEvent): void;
+}
+interface DragTarget {
+  dragOverHandler(eventL: DragEvent): void;
+  dropHandler(eventL: DragEvent): void;
+  dragLeaveHandler(eventL: DragEvent): void;
+}
 
+//decorators
 interface Validatable {
   value: string | number;
   required?: boolean;
@@ -18,7 +28,7 @@ enum Status {
 }
 
 // Project state Management
-type Listener = (items: Project[]) => void;
+type Listener = (items: Postit[]) => void;
 
 function validate(validatableInput: Validatable): boolean {
   let isValid = true;
@@ -101,7 +111,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   }
 }
 
-class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
+class InputComponent extends Component<HTMLDivElement, HTMLFormElement> {
   titleInputElement: HTMLInputElement;
   descriptionInputElement: HTMLInputElement;
   valueInputElement: HTMLInputElement;
@@ -129,15 +139,15 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   private submitHandler(event: Event) {
     event.preventDefault();
 
-    const project = new Project(
+    const postit = new Postit(
       this.titleInputElement.value,
       this.descriptionInputElement.value,
       +this.valueInputElement.value
     );
 
-    const projectValidation = projects.addProject(project);
+    const postitValidation = postits.addPostit(postit);
 
-    if (projectValidation) {
+    if (postitValidation) {
       this.titleInputElement.value = "";
       this.descriptionInputElement.value = "";
       this.valueInputElement.value = "";
@@ -147,8 +157,8 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   }
 }
 
-class ProjectList extends Component<HTMLDivElement, HTMLElement> {
-  assignedProjects: any[];
+class PostitListComponent extends Component<HTMLDivElement, HTMLElement> {
+  assignedPostits: any[];
 
   constructor(public status: Status) {
     super(
@@ -158,16 +168,16 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
       `${status.toString().toLowerCase()}-post-it`
     );
 
-    this.assignedProjects = [];
+    this.assignedPostits = [];
 
     this.configure();
 
-    projects.addListener((projects: Project[]) => {
-      const relevantProjects = projects.filter((prj) => {
+    postits.addListener((postit: Postit[]) => {
+      const relevantProjects = postit.filter((prj) => {
         return prj.status === this.status;
       });
-      this.assignedProjects = relevantProjects;
-      this.renderProjects();
+      this.assignedPostits = relevantProjects;
+      this.renderPostits();
     });
   }
 
@@ -175,7 +185,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     this.element.querySelector("h2")!.textContent = this.status.toString();
   }
 
-  private renderProjects() {
+  private renderPostits() {
     const listId = `${this.status.toString()}-post-it-list`;
     const listEl = document
       .getElementById(`${this.status.toString().toLocaleLowerCase()}-post-it`)!
@@ -183,19 +193,19 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     listEl.innerHTML = "";
     listEl.id = listId;
 
-    for (const projectItem of this.assignedProjects) {
-      new ProjectComponent(this.element.querySelector("ul")!.id, projectItem);
+    for (const postitItem of this.assignedPostits) {
+      new PostitComponent(this.element.querySelector("ul")!.id, postitItem);
     }
   }
 }
 
-class ProjectComponent extends Component<HTMLUListElement, HTMLLIElement> {
-  private project: Project;
+class PostitComponent extends Component<HTMLUListElement, HTMLLIElement> {
+  private postit: Postit;
 
-  constructor(hostId: string, project: Project) {
-    super("post-it", hostId, false, project.id);
+  constructor(hostId: string, postit: Postit) {
+    super("post-it", hostId, false, postit.id);
 
-    this.project = project;
+    this.postit = postit;
 
     this.configure();
     this.renderContent();
@@ -203,12 +213,12 @@ class ProjectComponent extends Component<HTMLUListElement, HTMLLIElement> {
   configure() {}
 
   renderContent() {
-    this.element.querySelector("h2")!.textContent = this.project.title;
-    this.element.querySelector("p")!.textContent = this.project.description;
+    this.element.querySelector("h2")!.textContent = this.postit.title;
+    this.element.querySelector("p")!.textContent = this.postit.description;
   }
 }
 
-class Project {
+class Postit {
   id: string;
   title: string;
   description: string;
@@ -222,47 +232,47 @@ class Project {
   }
 }
 
-class Projects {
+class Postits {
   private listeners: Listener[] = [];
 
-  projectList: Project[] = [];
+  postitList: Postit[] = [];
 
   hostElement?: HTMLElement;
-  projectTemplate?: HTMLTemplateElement;
-  projectElement?: HTMLElement;
+  postitTemplate?: HTMLTemplateElement;
+  postitElement?: HTMLElement;
 
-  private static _Projects: Projects;
+  private static _Postits: Postits;
 
   private constructor() {}
 
   static getInstance() {
-    if (this._Projects) {
-      return this._Projects;
+    if (this._Postits) {
+      return this._Postits;
     }
-    this._Projects = new Projects();
+    this._Postits = new Postits();
 
-    return this._Projects;
+    return this._Postits;
   }
 
   addListener(listenerFn: Listener) {
     this.listeners.push(listenerFn);
   }
 
-  addProject(project: Project): boolean {
-    const validation = this.Validation(project);
+  addPostit(postit: Postit): boolean {
+    const validation = this.Validation(postit);
 
     if (validation) {
-      this.projectList.push(project);
+      this.postitList.push(postit);
 
       for (const listenerFn of this.listeners) {
-        listenerFn(this.projectList.slice());
+        listenerFn(this.postitList.slice());
       }
     }
 
     return validation;
   }
 
-  private Validation(project: Project): boolean {
+  private Validation(project: Postit): boolean {
     const titleValidatable: Validatable = {
       value: project.title,
       required: true,
@@ -295,10 +305,10 @@ class Projects {
   }
 }
 
-const projects = Projects.getInstance();
+const postits = Postits.getInstance();
 
-const projectInput = new ProjectInput();
-const projectList0 = new ProjectList(Status.Unassigned);
-const projectList = new ProjectList(Status.Start);
-const projectList2 = new ProjectList(Status.Continue);
-const projectList3 = new ProjectList(Status.Stop);
+const projectInput = new InputComponent();
+const projectList0 = new PostitListComponent(Status.Unassigned);
+const projectList = new PostitListComponent(Status.Start);
+const projectList2 = new PostitListComponent(Status.Continue);
+const projectList3 = new PostitListComponent(Status.Stop);
