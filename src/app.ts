@@ -17,6 +17,9 @@ enum Status {
   Stop,
 }
 
+// Project state Management
+type Listener = (items: Project[]) => void;
+
 function validate(validatableInput: Validatable): boolean {
   let isValid = true;
 
@@ -146,8 +149,8 @@ class ProjectList {
     )!.textContent = status.toString();
     this.hostElement.appendChild(this.projectListElement);
 
-    projects.addListener((p: any[]) => {
-      this.assignedProjects = p;
+    projects.addListener((projects: Project[]) => {
+      this.assignedProjects = projects;
       this.renderProjects();
     });
   }
@@ -168,18 +171,18 @@ class Project {
   id: number;
   title: string;
   description: string;
-  value: number;
+  status: Status;
 
-  constructor(t: string, d: string, v: number) {
+  constructor(t: string, d: string, status: Status) {
     this.title = t.trim();
     this.description = d.trim();
-    this.value = v;
+    this.status = status;
     this.id = Math.random();
   }
 }
 
 class Projects {
-  private listeners: any[] = [];
+  private listeners: Listener[] = [];
 
   projectList: Project[] = [];
 
@@ -200,7 +203,7 @@ class Projects {
     return this._Projects;
   }
 
-  addListener(listenerFn: Function) {
+  addListener(listenerFn: Listener) {
     this.listeners.push(listenerFn);
   }
 
@@ -209,7 +212,7 @@ class Projects {
 
     if (validation) {
       this.hostElement = document.getElementById(
-        "unsorted-post-it"
+        `${project.status.toString()}-post-it`
       )! as HTMLElement;
 
       this.projectTemplate = document.getElementById(
@@ -222,7 +225,7 @@ class Projects {
       );
 
       this.projectElement = projectNode.firstElementChild as HTMLElement;
-      this.projectElement.innerText = `${project.title} - ${project.description} - ${project.value}`;
+      this.projectElement.innerText = `${project.title} - ${project.description}`;
       this.hostElement.appendChild(this.projectElement);
 
       this.projectList.push(project);
@@ -251,10 +254,10 @@ class Projects {
     };
 
     const valueValidatable: Validatable = {
-      value: project.value,
-      required: false,
+      value: project.status,
+      required: true,
       minValue: 0,
-      maxValue: 99,
+      maxValue: 3,
     };
 
     if (
