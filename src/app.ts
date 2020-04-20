@@ -98,12 +98,14 @@ class ProjectInput {
       +this.valueInputElement.value
     );
 
-    if (project.isValid) {
+    const projectValidation = projects.addProject(project);
+
+    if (projectValidation) {
       this.titleInputElement.value = "";
       this.descriptionInputElement.value = "";
       this.valueInputElement.value = "";
     } else {
-      alert(`invlaid input: ${project.validationMessage}`);
+      alert(`invlaid input: ${"Invalid input"}`);
     }
   }
 }
@@ -132,24 +134,30 @@ class ProjectList {
 }
 
 class Project {
-  _title: string;
-  _description: string;
-  _value: number;
-  isValid = true;
-  validationMessage = "Your input is invalid, try harder...";
+  id: number;
+  title: string;
+  description: string;
+  value: number;
+
+  constructor(t: string, d: string, v: number) {
+    this.title = t.trim();
+    this.description = d.trim();
+    this.value = v;
+    this.id = Math.random();
+  }
+}
+
+class Projects {
+  projectList: Projects[] = [];
 
   hostElement?: HTMLElement;
   projectTemplate?: HTMLTemplateElement;
   projectElement?: HTMLElement;
 
-  constructor(t: string, d: string, v: number) {
-    this._title = t.trim();
-    this._description = d.trim();
-    this._value = v;
+  addProject(project: Project): boolean {
+    const validation = this.Validation(project);
 
-    this.Validation();
-
-    if (this.isValid) {
+    if (validation) {
       this.hostElement = document.getElementById(
         "unsorted-post-it"
       )! as HTMLElement;
@@ -164,28 +172,30 @@ class Project {
       );
 
       this.projectElement = projectNode.firstElementChild as HTMLElement;
-      this.projectElement.innerText = `${this._title} - ${this._description} - ${this._value}`;
+      this.projectElement.innerText = `${project.title} - ${project.description} - ${project.value}`;
       this.hostElement.appendChild(this.projectElement);
     }
+
+    return validation;
   }
 
-  private Validation() {
+  private Validation(project: Project): boolean {
     const titleValidatable: Validatable = {
-      value: this._title,
+      value: project.title,
       required: true,
       minLength: 1,
       maxLength: 50,
     };
 
     const descriptionValidatable: Validatable = {
-      value: this._description,
+      value: project.description,
       required: true,
       minLength: 1,
       maxLength: 200,
     };
 
     const valueValidatable: Validatable = {
-      value: this._value,
+      value: project.value,
       required: false,
       minValue: 0,
       maxValue: 99,
@@ -196,13 +206,16 @@ class Project {
       !validate(descriptionValidatable) ||
       !validate(valueValidatable)
     ) {
-      this.isValid = false;
+      return false;
     }
+    return true;
   }
 }
 
+const projects = new Projects();
+
 const projectInput = new ProjectInput();
-const projectList0 = new ProjectList("Unsorted");
+const projectList0 = new ProjectList("Unsorted"); //project state instead?
 const projectList = new ProjectList("Start");
 const projectList2 = new ProjectList("Continue");
 const projectList3 = new ProjectList("Stop");
