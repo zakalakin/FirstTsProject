@@ -98,11 +98,10 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     );
   }
 
-  // abstract configure(): void;
+  abstract configure(): void;
   // abstract renderContent(): void;
 }
 
-//make singleton
 class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   titleInputElement: HTMLInputElement;
   descriptionInputElement: HTMLInputElement;
@@ -143,36 +142,24 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       alert(`invlaid input: ${"Invalid input"}`);
     }
   }
+
+  configure() {}
 }
 
-class ProjectList {
-  hostElement: HTMLDivElement;
-  projectListTemplate: HTMLTemplateElement;
-  projectListElement: HTMLElement;
-  status: Status;
+class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   assignedProjects: any[];
 
-  constructor(status: Status) {
-    this.status = status;
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
-    this.projectListTemplate = document.getElementById(
-      "project-list"
-    )! as HTMLTemplateElement;
-
-    const projectListNode = document.importNode(
-      this.projectListTemplate.content,
-      true
+  constructor(public status: Status) {
+    super(
+      "project-list",
+      "app",
+      false,
+      `${status.toString().toLowerCase()}-post-it`
     );
-    this.projectListElement = projectListNode.firstElementChild as HTMLElement;
+
     this.assignedProjects = [];
 
-    this.projectListElement.id = `${this.status
-      .toString()
-      .toLowerCase()}-post-it`;
-    this.projectListElement.querySelector(
-      "h2"
-    )!.textContent = status.toString();
-    this.hostElement.appendChild(this.projectListElement);
+    this.configure();
 
     projects.addListener((projects: Project[]) => {
       const relevantProjects = projects.filter((prj) => {
@@ -181,6 +168,10 @@ class ProjectList {
       this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
+  }
+
+  configure() {
+    this.element.querySelector("h2")!.textContent = this.status.toString();
   }
 
   private renderProjects() {
@@ -242,23 +233,6 @@ class Projects {
     const validation = this.Validation(project);
 
     if (validation) {
-      // this.hostElement = document.getElementById(
-      //   `${project.status.toString()}-post-it`
-      // )! as HTMLElement;
-
-      // this.projectTemplate = document.getElementById(
-      //   "post-it"
-      // )! as HTMLTemplateElement;
-
-      // const projectNode = document.importNode(
-      //   this.projectTemplate.content,
-      //   true
-      // );
-
-      // this.projectElement = projectNode.firstElementChild as HTMLElement;
-      // this.projectElement.innerText = `${project.title} - ${project.description}`;
-      // this.hostElement.appendChild(this.projectElement);
-
       this.projectList.push(project);
 
       for (const listenerFn of this.listeners) {
@@ -305,7 +279,7 @@ class Projects {
 const projects = Projects.getInstance();
 
 const projectInput = new ProjectInput();
-const projectList0 = new ProjectList(Status.Unassigned); //project state instead?
+const projectList0 = new ProjectList(Status.Unassigned);
 const projectList = new ProjectList(Status.Start);
 const projectList2 = new ProjectList(Status.Continue);
 const projectList3 = new ProjectList(Status.Stop);
