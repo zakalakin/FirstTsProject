@@ -154,6 +154,19 @@ class Projects {
   projectTemplate?: HTMLTemplateElement;
   projectElement?: HTMLElement;
 
+  private static _Projects: Projects;
+
+  private constructor() {}
+
+  static getInstance() {
+    if (this._Projects) {
+      return this._Projects;
+    }
+    this._Projects = new Projects();
+
+    return this._Projects;
+  }
+
   addProject(project: Project): boolean {
     const validation = this.Validation(project);
 
@@ -214,7 +227,7 @@ class Projects {
   }
 }
 
-const projects = new Projects();
+const projects = Projects.getInstance();
 
 const projectInput = new ProjectInput();
 const projectList0 = new ProjectList("Unsorted"); //project state instead?
