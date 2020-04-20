@@ -176,22 +176,40 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   }
 
   private renderProjects() {
-    const sectionEl = document.getElementById(
-      `${this.status.toString().toLocaleLowerCase()}-post-it`
-    )!;
-    const listEl = sectionEl.getElementsByTagName("ul")[0] as HTMLUListElement;
+    const listId = `${this.status.toString()}-post-it-list`;
+    const listEl = document
+      .getElementById(`${this.status.toString().toLocaleLowerCase()}-post-it`)!
+      .querySelector("ul")!;
     listEl.innerHTML = "";
+    listEl.id = listId;
 
     for (const projectItem of this.assignedProjects) {
-      const listItem = document.createElement("li");
-      listItem.textContent = projectItem.title;
-      listEl.appendChild(listItem);
+      new ProjectComponent(this.element.querySelector("ul")!.id, projectItem);
     }
   }
 }
 
+class ProjectComponent extends Component<HTMLUListElement, HTMLLIElement> {
+  private project: Project;
+
+  constructor(hostId: string, project: Project) {
+    super("post-it", hostId, false, project.id);
+
+    this.project = project;
+
+    this.configure();
+    this.renderContent();
+  }
+  configure() {}
+
+  renderContent() {
+    this.element.querySelector("h2")!.textContent = this.project.title;
+    this.element.querySelector("p")!.textContent = this.project.description;
+  }
+}
+
 class Project {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: Status;
@@ -200,7 +218,7 @@ class Project {
     this.title = t.trim();
     this.description = d.trim();
     this.status = status;
-    this.id = Math.random();
+    this.id = Math.random().toString();
   }
 }
 
