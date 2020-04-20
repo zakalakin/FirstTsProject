@@ -148,7 +148,7 @@ class Project {
 }
 
 class Projects {
-  projectList: Projects[] = [];
+  projectList: Project[] = [];
 
   hostElement?: HTMLElement;
   projectTemplate?: HTMLTemplateElement;
@@ -174,6 +174,8 @@ class Projects {
       this.projectElement = projectNode.firstElementChild as HTMLElement;
       this.projectElement.innerText = `${project.title} - ${project.description} - ${project.value}`;
       this.hostElement.appendChild(this.projectElement);
+
+      this.projectList.push(project);
     }
 
     return validation;
