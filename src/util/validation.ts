@@ -9,8 +9,6 @@ namespace App {
     maxValue?: number;
   }
 
-  // Project state Management
-
   export function validate(validatableInput: Validatable): boolean {
     let isValid = true;
 

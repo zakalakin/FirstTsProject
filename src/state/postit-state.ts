@@ -1,4 +1,4 @@
-/// <reference path = "validation.ts"/>
+/// <reference path = "../util/validation.ts"/>
 
 namespace App {
   type Listener = (items: Postit[]) => void;

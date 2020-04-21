@@ -1,20 +1,9 @@
-/// <reference path = "drag-drop-interfaces.ts"/>
-/// <reference path = "postit-model.ts"/>
-/// <reference path = "postit-state.ts"/>
+/// <reference path = "./models/drag-drop.ts"/>
+/// <reference path = "./models/postit.ts"/>
+/// <reference path = "./state/postit-state.ts"/>
+/// <reference path = "./decorators/autobind.ts"/>
 
 namespace App {
-  function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
-    const originalMethod = descriptor.value;
-    const adjDescriptor: PropertyDescriptor = {
-      configurable: true,
-      get() {
-        const boundFn = originalMethod.bind(this);
-        return boundFn;
-      },
-    };
-    return adjDescriptor;
-  }
-
   //component base class
   abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     templateElement: HTMLTemplateElement;
@@ -126,13 +115,10 @@ namespace App {
 
     @autobind
     dropHandler(event: DragEvent) {
-      // console.log(event.dataTransfer!.getData("text/plain"));
-      // console.log(event);
-      // console.log(event.target);
-
       const postitId = event.dataTransfer!.getData("text/plain");
       postits.movePostit(postitId, this.status);
-      // postits.
+      const listEl = this.element.querySelector("ul")!;
+      listEl.classList.remove("droppable");
     }
 
     @autobind
