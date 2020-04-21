@@ -1,4 +1,8 @@
 /// <reference path="base-component.ts" />
+/// <reference path="../decorators/autobind.ts" />
+/// <reference path="../state/postit-column.ts" />
+/// <reference path="../models/postit.ts" />
+/// <reference path="../models/drag-drop.ts" />
 
 namespace App {
   export class PostitListComponent

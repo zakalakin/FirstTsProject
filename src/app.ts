@@ -1,7 +1,4 @@
-/// <reference path = "./models/drag-drop.ts"/>
-/// <reference path = "./models/postit.ts"/>
-/// <reference path = "./state/postit-state.ts"/>
-/// <reference path = "./decorators/autobind.ts"/>
+/// <reference path = "./models/status.ts"/>
 /// <reference path = "./component/postit-input.ts"/>
 /// <reference path = "./component/postit-list.ts"/>
 

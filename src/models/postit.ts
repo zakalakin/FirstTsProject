@@ -1,11 +1,6 @@
-namespace App {
-  export enum Status {
-    Unassigned,
-    Start,
-    Continue,
-    Stop,
-  }
+/// <reference path = "status.ts"/>
 
+namespace App {
   export class Postit {
     id: string;
     title: string;
