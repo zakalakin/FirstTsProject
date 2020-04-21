@@ -55,13 +55,13 @@ button:active {
   border-color: #a80041;
 }
 
-.projects {
+.collumn {
   margin: 1rem;
   border: 1px solid #ff0062;
   background: white;
 }
 
-.projects header {
+.collumn header {
   background: #ff0062;
   height: 3.5rem;
   display: flex;
@@ -69,77 +69,58 @@ button:active {
   align-items: center;
 }
 
-/* #unsorted-post-it {
-  border-color: #808080;
-}
-
-#unsorted-post-it header {
-  background: #808080;
-} */
-
-/* #start-post-it {
-  border-color: #40ad39;
-}
-
-#start-post-it header {
-  background: #40ad39;
-}
-
-#continue-post-it {
-  border-color: #ff8400;
-}
-
-#continue-post-it header {
-  background: #ef7400;
-}
-
-#stop-post-it {
-  border-color: #ff3700;
-} */
-
 #stop-post-it header {
   background: #ff3700;
 }
 
-.projects h2 {
+.collumn h2 {
   margin: 0;
   color: white;
+  background: #ff0062;
+  text-align: center;
 }
 
-.projects ul {
+.collumn ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   list-style: none;
   margin: 0;
   padding: 1rem;
 }
 
-.projects li {
+.collumn li {
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
+  padding: 0;
   margin: 1rem;
-  background-color: white;
+  background-color: #ffb6d2;
   cursor: move;
+  width: 200px;
+  height: 200px;
 }
 
-.projects li h2 {
-  color: #ff0062;
-  margin: 0.5rem 0;
+.collumn li h2 {
+  color: white;
+  background: #ff5f9d;
+
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  padding-top: 6px;
+  height: 40px;
 }
 
-#finished-projects li h2 {
-  color: #0044ff;
-}
-
-.projects li h3 {
-  color: #575757;
-  font-size: 1rem;
-}
-
-.project li p {
-  margin: 0;
+.collumn li p {
+  margin: 1rem;
+  overflow-wrap: break-word;
 }
 
 .droppable {
   background: #ffd0e3;
+  opacity: 0.8;
+}
+
+.dragged {
 }
 
 #user-input {

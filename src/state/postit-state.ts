@@ -59,16 +59,16 @@ namespace App {
     private Validation(project: Postit): boolean {
       const titleValidatable: Validatable = {
         value: project.title,
-        required: true,
-        minLength: 1,
-        maxLength: 50,
+        required: false,
+        minLength: 0,
+        maxLength: 14,
       };
 
       const descriptionValidatable: Validatable = {
         value: project.description,
         required: true,
         minLength: 1,
-        maxLength: 200,
+        maxLength: 140,
       };
 
       const valueValidatable: Validatable = {
