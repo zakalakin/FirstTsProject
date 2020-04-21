@@ -183,11 +183,14 @@ class PostitListComponent extends Component<HTMLDivElement, HTMLElement>
     }
   }
 
+  @autobind
   dropHandler(event: DragEvent) {
-    console.log(event.dataTransfer!.getData("text/plain"));
-    console.log(event);
-    console.log(event.target);
+    // console.log(event.dataTransfer!.getData("text/plain"));
+    // console.log(event);
+    // console.log(event.target);
 
+    const postitId = event.dataTransfer!.getData("text/plain");
+    postits.movePostit(postitId, this.status);
     // postits.
   }
 
@@ -307,12 +310,25 @@ class Postits {
     if (validation) {
       this.postitList.push(postit);
 
-      for (const listenerFn of this.listeners) {
-        listenerFn(this.postitList.slice());
-      }
+      this.updateListeners();
     }
 
     return validation;
+  }
+
+  movePostit(id: string, newStatus: Status) {
+    const postit = this.postitList.filter((postit) => postit.id === id)[0];
+
+    if (postit && postit.status !== newStatus) {
+      postit.status = newStatus;
+      this.updateListeners();
+    }
+  }
+
+  private updateListeners() {
+    for (const listenerFn of this.listeners) {
+      listenerFn(this.postitList.slice());
+    }
   }
 
   private Validation(project: Postit): boolean {
