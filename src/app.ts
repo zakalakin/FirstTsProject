@@ -1,13 +1,9 @@
-/// <reference path = "./models/status.ts"/>
-/// <reference path = "./component/postit-input.ts"/>
-/// <reference path = "./component/postit-list.ts"/>
+import { InputComponent } from "./component/postit-input";
+import { PostitListComponent } from "./component/postit-list";
+import { Status } from "./models/status";
 
-namespace App {
-  //component base class
-
-  new InputComponent();
-  new PostitListComponent(Status.Unassigned);
-  new PostitListComponent(Status.Start);
-  new PostitListComponent(Status.Continue);
-  new PostitListComponent(Status.Stop);
-}
+new InputComponent();
+new PostitListComponent(Status.Unassigned);
+new PostitListComponent(Status.Start);
+new PostitListComponent(Status.Continue);
+new PostitListComponent(Status.Stop);
