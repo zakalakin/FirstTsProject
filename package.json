@@ -2,7 +2,7 @@
   "name": "ts-drag-and-drop",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bundle.js",
   "dependencies": {
     "lite-server": "^2.5.4",
     "package-lock.json": "^1.0.0"
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lite-server",
+    "start": "webpack-dev-server",
     "build": "webpack"
   },
   "repository": {
