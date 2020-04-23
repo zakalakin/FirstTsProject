@@ -2,8 +2,8 @@ import { ComponentPostit } from "./component-postit";
 // import { autobind } from "../decorators/autobind";
 
 export class ColumnHolderComponent extends ComponentPostit<
-  HTMLUListElement,
-  HTMLLIElement
+  HTMLDivElement,
+  HTMLElement
 > {
   constructor() {
     super("column-holder-template", "app", false, "column-holder");
