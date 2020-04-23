@@ -36,7 +36,7 @@ export class InputComponent extends ComponentPostit<
     const postit = new Postit(
       this.titleInputElement.value,
       this.descriptionInputElement.value,
-      +this.valueInputElement.value
+      this.valueInputElement.value.toUpperCase()
     );
 
     const postitValidation = postits.addPostit(postit);

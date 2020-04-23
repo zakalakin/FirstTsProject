@@ -1,12 +1,10 @@
-import { Status } from "status";
-
 export class Postit {
   id: string;
   title: string;
   description: string;
-  status: Status;
+  status: string;
 
-  constructor(t: string, d: string, status: Status) {
+  constructor(t: string, d: string, status: string) {
     this.title = t.trim();
     this.description = d.trim();
     this.status = status;

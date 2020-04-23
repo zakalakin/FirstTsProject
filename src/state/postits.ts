@@ -1,7 +1,6 @@
 import { Validatable } from "../util/validation";
 import { validate } from "../util/validation";
 import { Postit } from "../models/postit";
-import { Status } from "../models/status";
 
 type Listener = (items: Postit[]) => void;
 
@@ -43,7 +42,7 @@ export class Postits {
     return validation;
   }
 
-  movePostit(id: string, newStatus: Status) {
+  movePostit(id: string, newStatus: string) {
     const postit = this.postitList.filter((postit) => postit.id === id)[0];
 
     if (postit && postit.status !== newStatus) {
@@ -76,8 +75,8 @@ export class Postits {
     const valueValidatable: Validatable = {
       value: project.status,
       required: true,
-      minValue: 0,
-      maxValue: 3,
+      minLength: 1,
+      maxLength: 30,
     };
 
     if (

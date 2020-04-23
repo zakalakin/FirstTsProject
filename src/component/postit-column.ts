@@ -4,19 +4,18 @@ import { autobind } from "../decorators/autobind";
 import { postits } from "../state/postits";
 import { Postit } from "../models/postit";
 import { DragTarget } from "../models/drag-drop";
-import { Status } from "../models/status";
 
 export class PostitListComponent
   extends ComponentPostit<HTMLDivElement, HTMLElement>
   implements DragTarget {
   assignedPostits: any[];
-  //
-  constructor(public status: Status, public name: string) {
+
+  constructor(public status: string) {
     super(
       "project-list",
       "app",
       false,
-      `${status.toString().toLowerCase()}-post-it`
+      `${status.toString().toLowerCase().replace(" ", "-")}-column`
     );
 
     this.assignedPostits = [];
@@ -48,7 +47,7 @@ export class PostitListComponent
   }
 
   configure() {
-    this.element.querySelector("h2")!.textContent = this.name.toString();
+    this.element.querySelector("h2")!.textContent = this.status.toUpperCase();
 
     this.element.addEventListener("dragover", this.dragOverHandler);
     this.element.addEventListener("dragleave", this.dragLeaveHandler);
@@ -56,7 +55,7 @@ export class PostitListComponent
 
     postits.addListener((postit: Postit[]) => {
       const relevantProjects = postit.filter((prj) => {
-        return prj.status === this.status;
+        return prj.status.toUpperCase() === this.status.toUpperCase();
       });
       this.assignedPostits = relevantProjects;
       this.renderPostits();
@@ -64,22 +63,24 @@ export class PostitListComponent
   }
 
   private renderPostits() {
-    const listId = `${this.status.toString()}-post-it-list`;
+    const listId = `${this.status
+      .toLowerCase()
+      .replace(" ", "-")}-post-it-list`;
 
     const listEl = document
-      .getElementById(`${this.status.toString().toLocaleLowerCase()}-post-it`)!
+      .getElementById(
+        `${this.status.toLocaleLowerCase().replace(" ", "-")}-column`
+      )!
       .querySelector("ul")!;
 
     if (!listEl) {
       console.log(
         `can't find list: ${this.status.toString().toLocaleLowerCase()}`
       );
-
-      // new PostitListComponent(Status.Continue);
     }
 
     listEl.innerHTML = "";
-    listEl.id = listId;
+    listEl.id = listId; //maybe dont need?
 
     for (const postitItem of this.assignedPostits) {
       new PostitComponent(this.element.querySelector("ul")!.id, postitItem);
