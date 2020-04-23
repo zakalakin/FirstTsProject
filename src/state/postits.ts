@@ -33,9 +33,12 @@ export class Postits {
   addPostit(postit: Postit): boolean {
     const validation = this.Validation(postit);
 
+    if (postit.status === "") {
+      postit.status = "unsorted";
+    }
+
     if (validation) {
       this.postitList.push(postit);
-
       this.updateListeners();
     }
 
@@ -74,8 +77,8 @@ export class Postits {
 
     const valueValidatable: Validatable = {
       value: project.status,
-      required: true,
-      minLength: 1,
+      required: false,
+      minLength: 0,
       maxLength: 30,
     };
 
