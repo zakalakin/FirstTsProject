@@ -13,7 +13,7 @@ export class PostitListComponent
   constructor(public status: string) {
     super(
       "project-list",
-      "app",
+      "column-holder",
       false,
       `${status.toString().toLowerCase().replace(" ", "-")}-column`
     );
