@@ -11,5 +11,7 @@ export class ColumnHolderComponent extends ComponentPostit<
     this.configure();
   }
 
-  configure() {}
+  configure() {
+    this.element.classList.add("column-holder");
+  }
 }

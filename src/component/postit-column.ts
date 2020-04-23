@@ -27,7 +27,7 @@ export class PostitListComponent
   dragOverHandler(event: DragEvent) {
     if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
       event.preventDefault();
-      const listEl = this.element.querySelector("ul")!;
+      const listEl = this.element;
       listEl.classList.add("droppable");
     }
   }
@@ -36,13 +36,13 @@ export class PostitListComponent
   dropHandler(event: DragEvent) {
     const postitId = event.dataTransfer!.getData("text/plain");
     postits.movePostit(postitId, this.status);
-    const listEl = this.element.querySelector("ul")!;
+    const listEl = this.element;
     listEl.classList.remove("droppable");
   }
 
   @autobind
   dragLeaveHandler(event: DragEvent) {
-    const listEl = this.element.querySelector("ul")!;
+    const listEl = this.element;
     listEl.classList.remove("droppable");
   }
 
