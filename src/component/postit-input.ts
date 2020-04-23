@@ -1,5 +1,5 @@
 import { ComponentPostit } from "./component-postit";
-import { postits } from "../state/postit-column";
+import { postits } from "../state/postits";
 import { Postit } from "../models/postit";
 
 export class InputComponent extends ComponentPostit<

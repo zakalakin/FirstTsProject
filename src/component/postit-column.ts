@@ -1,7 +1,7 @@
 import { ComponentPostit } from "./component-postit";
 import { PostitComponent } from "./postit";
 import { autobind } from "../decorators/autobind";
-import { postits } from "../state/postit-column";
+import { postits } from "../state/postits";
 import { Postit } from "../models/postit";
 import { DragTarget } from "../models/drag-drop";
 import { Status } from "../models/status";
@@ -10,8 +10,8 @@ export class PostitListComponent
   extends ComponentPostit<HTMLDivElement, HTMLElement>
   implements DragTarget {
   assignedPostits: any[];
-
-  constructor(public status: Status) {
+  //
+  constructor(public status: Status, public name: string) {
     super(
       "project-list",
       "app",
@@ -48,7 +48,7 @@ export class PostitListComponent
   }
 
   configure() {
-    this.element.querySelector("h2")!.textContent = this.status.toString();
+    this.element.querySelector("h2")!.textContent = this.name.toString();
 
     this.element.addEventListener("dragover", this.dragOverHandler);
     this.element.addEventListener("dragleave", this.dragLeaveHandler);
@@ -65,9 +65,19 @@ export class PostitListComponent
 
   private renderPostits() {
     const listId = `${this.status.toString()}-post-it-list`;
+
     const listEl = document
       .getElementById(`${this.status.toString().toLocaleLowerCase()}-post-it`)!
       .querySelector("ul")!;
+
+    if (!listEl) {
+      console.log(
+        `can't find list: ${this.status.toString().toLocaleLowerCase()}`
+      );
+
+      // new PostitListComponent(Status.Continue);
+    }
+
     listEl.innerHTML = "";
     listEl.id = listId;
 
