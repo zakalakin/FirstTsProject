@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 20;
+}
+
+label,
+input,
+textarea {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+label {
+  font-weight: bold;
+}
+
+input,
+textarea {
+  font: inherit;
+  padding: 0.2rem 0.4rem;
+  width: 100%;
+  max-width: 30rem;
+  border: 1px solid rgb(175, 175, 175);
+}
+
+button {
+  font: inherit;
+  background: #ff0062;
+  border: 1px solid #ff0062;
+  cursor: pointer;
+  color: white;
+  padding: 0.75rem 1rem;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover,
+button:active {
+  background: #a80041;
+  border-color: #a80041;
+}
+
+.collumn {
+  min-width: 250px;
+  margin: 1rem;
+  border: 1px solid #ff0062;
+  background: white;
+}
+
+.collumn header {
+  background: #ff0062;
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#stop-post-it header {
+  background: #ff3700;
+}
+.column-holder {
+  display: flex;
+  flex-direction: row;
+}
+.collumn h2 {
+  margin: 0;
+  color: white;
+  background: #ff0062;
+  text-align: center;
+}
+
+.collumn ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+}
+
+.collumn li {
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 0;
+  margin: 1rem;
+  background-color: #ffb6d2;
+  cursor: move;
+  width: 200px;
+  height: 200px;
+}
+
+.collumn li h2 {
+  color: white;
+  background: #ff5f9d;
+
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  padding-top: 6px;
+  height: 40px;
+}
+
+.collumn li p {
+  margin: 1rem;
+  overflow-wrap: break-word;
+}
+
+.droppable {
+  background: #ffd0e3;
+  opacity: 0.8;
+}
+
+.dragged {
+}
+
+#user-input {
+  min-width: 250px;
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #ff0062;
+  background: #e2e2e2;
+}
