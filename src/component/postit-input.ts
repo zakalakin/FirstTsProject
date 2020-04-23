@@ -20,7 +20,7 @@ export class InputComponent extends ComponentPostit<
       "#description"
     ) as HTMLInputElement;
     this.valueInputElement = this.element.querySelector(
-      "#people"
+      "#status"
     ) as HTMLInputElement;
 
     this.configure();
