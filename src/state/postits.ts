@@ -1,6 +1,7 @@
 import { Validatable } from "../util/validation";
 import { validate } from "../util/validation";
 import { Postit } from "../models/postit";
+import { PostitListComponent } from "../component/postit-column";
 
 type Listener = (items: Postit[]) => void;
 
@@ -40,6 +41,15 @@ export class Postits {
     if (validation) {
       this.postitList.push(postit);
       this.updateListeners();
+
+      const colEl = document.getElementById(
+        `${postit.status.toLowerCase().replace(" ", "-")}-column`
+      );
+
+      if (!colEl) {
+        new PostitListComponent(postit.status);
+        this.updateListeners();
+      }
     }
 
     return validation;

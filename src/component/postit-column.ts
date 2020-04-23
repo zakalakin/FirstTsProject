@@ -67,17 +67,11 @@ export class PostitListComponent
       .toLowerCase()
       .replace(" ", "-")}-post-it-list`;
 
-    const listEl = document
+    let listEl = document
       .getElementById(
         `${this.status.toLocaleLowerCase().replace(" ", "-")}-column`
       )!
       .querySelector("ul")!;
-
-    if (!listEl) {
-      console.log(
-        `can't find list: ${this.status.toString().toLocaleLowerCase()}`
-      );
-    }
 
     listEl.innerHTML = "";
     listEl.id = listId; //maybe dont need?
